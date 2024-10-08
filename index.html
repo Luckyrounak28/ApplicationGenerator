@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Generator with AI</title>
+    <style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f0f0f0;
+        padding: 20px;
+        color: #333;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: auto;
+        background: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+        font-size: 28px;
+    }
+
+    label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 8px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        background: #fafafa;
+        transition: border-color 0.3s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #28a745;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+
+    .output {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        white-space: pre-line;
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            padding: 20px;
+        }
+    }
+
+    .leave-dates {
+        display: none;
+    }
+
+    /* Additional improvements */
+    .container h1::before, .container h1::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 3px;
+        background-color: #28a745;
+        margin: 10px auto;
+    }
+
+    button#downloadBtn {
+        background-color: #007bff;
+    }
+
+    button#downloadBtn:hover {
+        background-color: #0056b3;
+    }
+
+    footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 14px;
+        color: #777;
+    }
+
+    footer a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Application Generator</h1>
+        <form id="applicationForm">
+            <label for="receiver">To (e.g., The HOD):</label>
+            <input type="text" id="receiver" placeholder="Enter receiver designation" required>
+            
+            <label for="address">Address (e.g., Aimt, Lucknow):</label>
+            <input type="text" id="address" placeholder="Enter receiver's address" required>
+            
+            <label for="date">Date:</label>
+            <input type="date" id="date" required>
+
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" placeholder="Enter subject" required>
+
+            <label for="reason">Reason:</label>
+            <select id="reason" required onchange="showLeaveDates()">
+                <option value="">Select reason</option>
+                <option value="sick">Sick leave</option>
+                <option value="personal">Personal work</option>
+                <option value="family">Family emergency</option>
+                <option value="other">Other</option>
+            </select>
+
+            <div id="leaveDates" class="leave-dates">
+                <label for="startDate">Start Date of Leave:</label>
+                <input type="date" id="startDate">
+                
+                <label for="endDate">End Date of Leave:</label>
+                <input type="date" id="endDate">
+            </div>
+
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" placeholder="Enter your name" required>
+
+            <label for="course">Course (e.g., Btech CSE):</label>
+            <input type="text" id="course" placeholder="Enter your course" required>
+
+            <label for="year">Year (e.g., 3rd year):</label>
+            <input type="text" id="year" placeholder="Enter your year" required>
+
+            <label for="roll">Roll Number:</label>
+            <input type="text" id="roll" placeholder="Enter your roll number" required>
+
+            <button type="button" onclick="generateApplication()">Generate Application</button>
+        </form>
+
+        <div id="applicationOutput" class="output"></div>
+
+        <button id="downloadBtn" style="display:none;" onclick="downloadApplication()">Download Application</button>
+    </div>
+
+    <footer>
+        Created and designed by <a href="#">Vishal Kumar</a>
+    </footer>
+
+    <script>
+    function showLeaveDates() {
+        const reason = document.getElementById('reason').value;
+        const leaveDatesDiv = document.getElementById('leaveDates');
+        if (reason === "sick" || reason === "personal" || reason === "family" || reason === "other") {
+            leaveDatesDiv.style.display = "block";
+        } else {
+            leaveDatesDiv.style.display = "none";
+        }
+    }
+
+    function generateApplication() {
+        const receiver = document.getElementById('receiver').value;
+        const address = document.getElementById('address').value;
+        const date = document.getElementById('date').value;
+        const subject = document.getElementById('subject').value;
+        const reason = document.getElementById('reason').value;
+        const name = document.getElementById('name').value;
+        const course = document.getElementById('course').value;
+        const year = document.getElementById('year').value;
+        const roll = document.getElementById('roll').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+
+        let reasonContent = "";
+
+        if (reason === "sick") {
+            reasonContent = `I am currently unwell and unable to attend classes from ${startDate} to ${endDate}.`;
+        } else if (reason === "personal") {
+            reasonContent = `I have personal work to attend to from ${startDate} to ${endDate}, which requires my attention.`;
+        } else if (reason === "family") {
+            reasonContent = `Due to a family emergency, I am unable to be present at the institute from ${startDate} to ${endDate}.`;
+        } else {
+            reasonContent = `I have an unavoidable situation that requires my absence from ${startDate} to ${endDate}.`;
+        }
+
+        const applicationContent = `
+To,
+${receiver}
+${address}
+
+Date: ${date}
+
+Subject: ${subject}
+
+Respected Sir/Madam,
+
+This is ${name}, a student of ${course}, ${year}. I would like to inform you that ${reasonContent} Therefore, I kindly request you to grant me leave for the mentioned period.
+
+Thanking you,
+Yours sincerely,
+${name}
+${course}
+${year}
+Roll No: ${roll}
+        `;
+
+        document.getElementById('applicationOutput').textContent = applicationContent;
+        document.getElementById('downloadBtn').style.display = 'block';
+    }
+
+    function downloadApplication() {
+        const applicationContent = document.getElementById('applicationOutput').textContent;
+        const blob = new Blob([applicationContent], { type: "text/plain" });
+
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "application.txt";
+        link.click();
+    }
+    </script>
+</body>
+</html>
