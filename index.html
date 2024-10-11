@@ -101,7 +101,7 @@
         }
     }
 
-    .leave-dates {
+    .festival-options {
         display: none;
     }
 
@@ -157,21 +157,32 @@
             <input type="text" id="subject" placeholder="Enter subject" required>
 
             <label for="reason">Reason:</label>
-            <select id="reason" required onchange="showLeaveDates()">
+            <select id="reason" required onchange="toggleFestivalOptions()">
                 <option value="">Select reason</option>
                 <option value="sick">Sick leave</option>
                 <option value="personal">Personal work</option>
                 <option value="family">Family emergency</option>
+                <option value="festival">Festival</option>
                 <option value="other">Other</option>
             </select>
 
-            <div id="leaveDates" class="leave-dates">
-                <label for="startDate">Start Date of Leave:</label>
-                <input type="date" id="startDate">
-                
-                <label for="endDate">End Date of Leave:</label>
-                <input type="date" id="endDate">
+            <div id="festivalOptions" class="festival-options">
+                <label for="festival">Select Festival:</label>
+                <select id="festival">
+                    <option value="">Choose a festival</option>
+                    <option value="Diwali">Diwali</option>
+                    <option value="Holi">Holi</option>
+                    <option value="Dussehra">Dussehra</option>
+                    <option value="Eid">Eid</option>
+                    <option value="Christmas">Christmas</option>
+                </select>
             </div>
+
+            <label for="startDate">Start Date of Leave:</label>
+            <input type="date" id="startDate">
+
+            <label for="endDate">End Date of Leave:</label>
+            <input type="date" id="endDate">
 
             <label for="name">Your Name:</label>
             <input type="text" id="name" placeholder="Enter your name" required>
@@ -198,13 +209,14 @@
     </footer>
 
     <script>
-    function showLeaveDates() {
+    function toggleFestivalOptions() {
         const reason = document.getElementById('reason').value;
-        const leaveDatesDiv = document.getElementById('leaveDates');
-        if (reason === "sick" || reason === "personal" || reason === "family" || reason === "other") {
-            leaveDatesDiv.style.display = "block";
+        const festivalOptionsDiv = document.getElementById('festivalOptions');
+
+        if (reason === "festival") {
+            festivalOptionsDiv.style.display = "block";
         } else {
-            leaveDatesDiv.style.display = "none";
+            festivalOptionsDiv.style.display = "none";
         }
     }
 
@@ -220,6 +232,7 @@
         const roll = document.getElementById('roll').value;
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
+        const festival = document.getElementById('festival').value;
 
         let reasonContent = "";
 
@@ -229,8 +242,10 @@
             reasonContent = `I have personal work to attend to from ${startDate} to ${endDate}, which requires my attention.`;
         } else if (reason === "family") {
             reasonContent = `Due to a family emergency, I am unable to be present at the institute from ${startDate} to ${endDate}.`;
+        } else if (reason === "festival") {
+            reasonContent = `On the occasion of ${festival}, I request leave from ${startDate} to ${endDate}.`;
         } else {
-            reasonContent = `I have an unavoidable situation that requires my absence from ${startDate} to ${endDate}.`;
+            reasonContent = `I have an important matter that requires my attention from ${startDate} to ${endDate}.`;
         }
 
         const applicationContent = `
@@ -244,27 +259,31 @@ Subject: ${subject}
 
 Respected Sir/Madam,
 
-This is ${name}, a student of ${course}, ${year}. I would like to inform you that ${reasonContent} Therefore, I kindly request you to grant me leave for the mentioned period.
+I am writing to inform you that I, ${name}, a student of ${course} (${year}), would like to apply for leave due to the following reason:
 
-Thanking you,
-Yours sincerely,
+${reasonContent}
+
+I kindly request you to grant me leave for the mentioned period.
+
+Thank you for your understanding.
+
+Sincerely,
 ${name}
-${course}
-${year}
+${course} (${year})
 Roll No: ${roll}
-        `;
+`;
 
-        document.getElementById('applicationOutput').textContent = applicationContent;
-        document.getElementById('downloadBtn').style.display = 'block';
+        const outputDiv = document.getElementById('applicationOutput');
+        outputDiv.textContent = applicationContent;
+        document.getElementById('downloadBtn').style.display = "block";
     }
 
     function downloadApplication() {
-        const applicationContent = document.getElementById('applicationOutput').textContent;
-        const blob = new Blob([applicationContent], { type: "text/plain" });
-
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "application.txt";
+        const applicationText = document.getElementById('applicationOutput').textContent;
+        const blob = new Blob([applicationText], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'application.txt';
         link.click();
     }
     </script>
